@@ -1,0 +1,56 @@
+[{
+  "_id": 1,
+  "created":"2018-10-13T03:58:40.252Z",
+  "queueName":"example",
+  "host":"example.com",
+  "path":"/",
+  "port":"",
+  "protocol":"http",
+  "uriPath":"/",
+  "url":"http://example.com/",
+  "depth":1,
+  "fetched":true,
+  "status":"headers",
+  "stateData":{
+    "requestLatency": 341,
+    "requestTime": 341,
+    "contentLength": 606,
+    "contentType": "text/html; charset=UTF-8",
+    "code": 200,
+    "headers": {
+      "content-encoding": "gzip",
+      "accept-ranges": "bytes",
+      "cache-control": "max-age=604800",
+      "content-type": "text/html; charset=UTF-8"
+    }
+}
+},{
+  "_id": 2,
+  "created":"2018-10-13T03:58:40.350Z",
+  "queueName":"example",
+  "host":"example.com",
+  "path":"/foo",
+  "port":"",
+  "protocol":"http",
+  "uriPath":"/",
+  "url":"http://example.com/foo",
+  "depth":1,
+  "fetched":false,
+  "status":"queued",
+  "stateData":{}
+},{
+  "_id": 3,
+  "created":"2018-10-13T03:58:40.000Z",
+  "queueName":"example",
+  "host":"example.com",
+  "path":"/bar",
+  "port":"",
+  "protocol":"http",
+  "uriPath":"/",
+  "url":"http://example.com/bar",
+  "depth":1,
+  "fetched":false,
+  "status":"queued",
+  "stateData":{}
+}]
+
