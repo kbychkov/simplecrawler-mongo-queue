@@ -5,7 +5,7 @@
 
 This is a queue implementation for [simplecrawler](https://www.npmjs.com/package/simplecrawler) backed by MongoDB.
 
-**Warning!** The library still in development and may work unstable.
+**Warning!** The library is still in development and may work unstable.
 
 ## Installation
 
@@ -27,8 +27,8 @@ crawler.queue = new MongoQueue(datastore, name);
 
 The `MongoQueue` constructor has two arguments.
 
-`datastore` - the application should provide a MongoDB collection where the queue will be stored.  
-`name` (optional) - a name of the queue to distinguish the different crawlers. If the argument is omitted the constructor creates a random queue name.
+- `datastore` - the application should provide a MongoDB collection where the queue will be stored.
+- `name` (optional) - a name of the queue to distinguish the different crawlers. If the argument is omitted the constructor creates a random queue name.
 
 ## Example
 
