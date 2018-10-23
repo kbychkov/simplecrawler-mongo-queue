@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "lodash.merge": "^4.6.1",
-    "shortid": "^2.2.13",
-    "simplecrawler": "^1.1.6"
+    "shortid": "^2.2.13"
   }
 }
