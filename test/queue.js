@@ -1,4 +1,3 @@
-const MongoMemoryServer = require('mongodb-memory-server').default;
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const shortid = require('shortid');
@@ -8,22 +7,26 @@ describe('Queue object', function () {
   const MongoQueue = require('..');
   const exampleJSON = require('./example.json');
 
-  before(async function () {
-    const mongoServer = new MongoMemoryServer();
-    const uri = await mongoServer.getConnectionString();
-    const dbName = await mongoServer.getDbName();
-    const client = await MongoClient.connect(uri, { useNewUrlParser: true });
-
-    this.server = mongoServer;
-    this.client = client;
-    this.datastore = client.db(dbName).collection('queue');
-
-    await this.datastore.insertMany(exampleJSON);
+  const dbUri = 'mongodb://localhost:27017';
+  const dbName = 'simplecrawler-mongo-queue';
+  
+  before(function (done) {
+    MongoClient.connect(dbUri, { useNewUrlParser: true }, (err, client) => {
+      if (err) return done(err);
+      this.dbClient = client;
+      this.dbCollection = client.db(dbName).collection(shortid.generate());
+      this.dbCollection.insertMany(exampleJSON, (err, result) => {
+        if (err) return done(err);
+        done();
+      });
+    });
   });
 
-  after(function () {
-    this.client.close();
-    this.server.stop();
+  after(function (done) {
+    this.dbClient.db(dbName).dropDatabase(() => {
+      this.dbClient.close();
+      done();
+    });
   });
 
   it('exports function', function () {
@@ -38,20 +41,20 @@ describe('Queue object', function () {
     }
 
     try {
-      new MongoQueue(this.datastore, '');
+      new MongoQueue(this.dbCollection, '');
     } catch (e) {
       assert.equal(e.message, '`name` param should be a non-empty string');
     }
   });
 
   it('should be initialized without a name', function () {
-    const queue = new MongoQueue(this.datastore);
+    const queue = new MongoQueue(this.dbCollection);
     assert.ok(queue instanceof MongoQueue);
     assert.ok(shortid.isValid(queue.name));
   });
 
   it('should be initialized with given name', function () {
-    this.queue = new MongoQueue(this.datastore, 'example');
+    this.queue = new MongoQueue(this.dbCollection, 'example');
     assert.ok(this.queue instanceof MongoQueue);
   });
 
