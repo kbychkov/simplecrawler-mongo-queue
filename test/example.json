@@ -23,7 +23,7 @@
       "cache-control": "max-age=604800",
       "content-type": "text/html; charset=UTF-8"
     }
-}
+  }
 },{
   "_id": 2,
   "created":"2018-10-13T03:58:40.350Z",
@@ -40,7 +40,7 @@
   "stateData":{}
 },{
   "_id": 3,
-  "created":"2018-10-13T03:58:40.000Z",
+  "created":"2018-10-13T03:58:40.730Z",
   "queueName":"example",
   "host":"example.com",
   "path":"/bar",
@@ -53,4 +53,3 @@
   "status":"queued",
   "stateData":{}
 }]
-
