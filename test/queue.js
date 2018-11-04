@@ -8,7 +8,7 @@ describe('Queue object', function () {
   const exampleJSON = require('./example.json');
 
   const dbUri = 'mongodb://localhost:27017';
-  const dbName = 'simplecrawler-mongo-queue';
+  const dbName = 'simplecrawler-mongo-queue-test';
 
   before(function (done) {
     MongoClient.connect(dbUri, { useNewUrlParser: true }, (err, client) => {
