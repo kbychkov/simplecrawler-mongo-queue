@@ -1,4 +1,4 @@
-const merge = require('lodash.merge');
+const flatten = require('flatten-obj')();
 const shortid = require('shortid');
 
 class MongoQueue {
@@ -72,21 +72,18 @@ class MongoQueue {
       _id: id,
       queueName: this.name
     };
+    const update = {
+      $set: flatten(updates)
+    };
 
-    this.datastore.findOne(query, (err, result) => {
-      if (err) callback(err);
-
-      const queueItem = merge({}, result, updates);
-
-      this.datastore.replaceOne({ _id: id }, queueItem, {}, (err, result) => {
-        if (err) {
-          callback(err);
-        } else if (!result.matchedCount) {
-          callback(new Error("No queueItem found with that ID"));
-        } else {
-          callback(null, this.mapId(queueItem));
-        }
-      });
+    this.datastore.findOneAndUpdate(query, update, { returnOriginal: false }, (err, result) => {
+      if (err) {
+        callback(err);
+      } else if (!result.lastErrorObject.n) {
+        callback(new Error("No queueItem found with that ID"));
+      } else {
+        callback(null, this.mapId(result.value));
+      }
     });
   }
 
