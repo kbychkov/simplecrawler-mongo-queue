@@ -25,7 +25,8 @@
   ],
   "devDependencies": {
     "mocha": "^5.2.0",
-    "mongodb": "^3.1.10"
+    "mongodb": "^3.1.10",
+    "simplecrawler": "^1.1.6"
   },
   "dependencies": {
     "flatten-obj": "^3.1.1",
