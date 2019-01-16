@@ -1,15 +1,22 @@
 const Crawler = require('simplecrawler');
 const MongoQueue = require('./index');
 const MongoClient = require('mongodb').MongoClient;
+const Server = require('./test/fixtures/server');
+
+const server = new Server(100);
+
+server.on('listening', () => console.log('Server started on http://localhost:8000'));
+server.listen(8000);
 
 const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true });
 client.connect(err => {
   const db = client.db('simplecrawler-mongo-queue');
   const collection = db.collection('queue');
 
-  const crawler = new Crawler('http://example.com');
+  const crawler = new Crawler('http://localhost:8000');
   crawler.queue = new MongoQueue(collection);
-  crawler.maxDepth = 2;
+
+  console.log(`queue.name = '${crawler.queue.name}'`);
 
   crawler.on('fetchheaders', (queueItem) => {
     console.log(queueItem.url);
@@ -18,7 +25,9 @@ client.connect(err => {
   crawler.on('complete', () => {
     console.log('Crawl complete!');
     client.close();
-    process.exit();
+    server.close(() => {
+      process.exit();
+    });
   });
 
   crawler.start();
