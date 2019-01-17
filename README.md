@@ -1,5 +1,5 @@
 [![npm](https://img.shields.io/npm/v/simplecrawler-mongo-queue.svg)](https://www.npmjs.com/package/simplecrawler-mongo-queue)
-[![Travis (.org)](https://img.shields.io/travis/kbychkov/simplecrawler-mongo-queue.svg)](https://travis-ci.org/kbychkov/simplecrawler-mongo-queue)
+[![Travis (.org)](https://img.shields.io/travis/kbychkov/simplecrawler-mongo-queue.svg)](https://travis-ci.org/kbychkov/simplecrawler-mongo-queue) [![Greenkeeper badge](https://badges.greenkeeper.io/kbychkov/simplecrawler-mongo-queue.svg)](https://greenkeeper.io/)
 
 # MongoDB queue for Simplecrawler
 
