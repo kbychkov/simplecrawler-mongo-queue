@@ -34,7 +34,11 @@ class MongoQueue {
         callback(err);
       } else if (!exists || force) {
         this.datastore.insertOne(doc, (err, result) => {
-          callback(err, this.mapId(result.ops[0]));
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, this.mapId(result.ops[0]));
+          }
         });
       } else {
         const error = new Error('Resource already exists in queue!');
