@@ -62,8 +62,7 @@ class MongoQueue {
 
   getById(id, callback) {
     const query = {
-      _id: id,
-      queueName: this.name
+      _id: id
     };
 
     this.datastore.findOne(query, (err, result) => {
@@ -73,8 +72,7 @@ class MongoQueue {
 
   update(id, updates, callback) {
     const query = {
-      _id: id,
-      queueName: this.name
+      _id: id
     };
     const update = {
       $set: flatten(updates)
