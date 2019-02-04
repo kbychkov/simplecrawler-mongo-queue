@@ -1,7 +1,10 @@
-[![npm](https://img.shields.io/npm/v/simplecrawler-mongo-queue.svg)](https://www.npmjs.com/package/simplecrawler-mongo-queue)
-[![Travis (.org)](https://img.shields.io/travis/kbychkov/simplecrawler-mongo-queue.svg)](https://travis-ci.org/kbychkov/simplecrawler-mongo-queue) [![Greenkeeper badge](https://badges.greenkeeper.io/kbychkov/simplecrawler-mongo-queue.svg)](https://greenkeeper.io/)
-
 # MongoDB queue for Simplecrawler
+
+[![npm](https://img.shields.io/npm/v/simplecrawler-mongo-queue.svg)](https://www.npmjs.com/package/simplecrawler-mongo-queue)
+[![Travis (.org)](https://img.shields.io/travis/kbychkov/simplecrawler-mongo-queue.svg)](https://travis-ci.org/kbychkov/simplecrawler-mongo-queue)
+[![Dependency Status](https://img.shields.io/david/kbychkov/simplecrawler-mongo-queue.svg)](https://david-dm.org/kbychkov/simplecrawler-mongo-queue)
+[![devDependency Status](https://img.shields.io/david/dev/kbychkov/simplecrawler-mongo-queue.svg)](https://david-dm.org/kbychkov/simplecrawler-mongo-queue?type=dev)
+[![Greenkeeper badge](https://badges.greenkeeper.io/kbychkov/simplecrawler-mongo-queue.svg)](https://greenkeeper.io/)
 
 This is a queue implementation for [simplecrawler](https://www.npmjs.com/package/simplecrawler) backed by MongoDB.
 
