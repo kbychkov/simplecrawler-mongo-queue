@@ -63,6 +63,18 @@ describe('Queue object', function () {
     assert.equal(queue.name, 'example');
   });
 
+  it('creates index on the collection', function (done) {
+    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
+    const queue = new MongoQueue(dbCollection);
+
+    queue.init().then(result => {
+      assert.equal(result, 'queueName_1_status_1_created_1');
+      done();
+    }).catch(err => {
+      done(err);
+    });
+  });
+
   it('should replace `_id` with `id`', function () {
     const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
     const queue = new MongoQueue(dbCollection);

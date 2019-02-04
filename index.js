@@ -1,6 +1,8 @@
 const flatten = require('flatten-obj')();
 const shortid = require('shortid');
 
+let initPromise;
+
 class MongoQueue {
   constructor(datastore, name) {
     if (typeof datastore !== 'object') throw new Error('`datastore` param should be a MongoDB collection');
@@ -15,6 +17,22 @@ class MongoQueue {
     this.name = name;
   }
 
+  init() {
+    if (!initPromise) {
+      initPromise = new Promise((resolve, reject) => {
+        this.datastore.createIndex({ queueName: 1, status: 1, created: 1 }, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    }
+
+    return initPromise;
+  }
+
   mapId(queueItem) {
     if (!queueItem) return null;
     const obj = Object.assign({ id: queueItem._id }, queueItem);
@@ -22,7 +40,9 @@ class MongoQueue {
     return obj;
   }
 
-  add(queueItem, force, callback) {
+  async add(queueItem, force, callback) {
+    await this.init();
+
     const doc = Object.assign({}, queueItem, {
       queueName: this.name,
       status: 'queued',
@@ -60,7 +80,9 @@ class MongoQueue {
     callback(new Error('Not implemented'));
   }
 
-  getById(id, callback) {
+  async getById(id, callback) {
+    await this.init();
+
     const query = {
       _id: id
     };
@@ -70,7 +92,9 @@ class MongoQueue {
     });
   }
 
-  update(id, updates, callback) {
+  async update(id, updates, callback) {
+    await this.init();
+
     const query = {
       _id: id
     };
@@ -89,7 +113,9 @@ class MongoQueue {
     });
   }
 
-  oldestUnfetchedItem(callback) {
+  async oldestUnfetchedItem(callback) {
+    await this.init();
+
     const query = {
       queueName: this.name,
       status: 'queued'
@@ -112,7 +138,9 @@ class MongoQueue {
     callback(new Error('Not implemented'));
   }
 
-  countItems(comparator, callback) {
+  async countItems(comparator, callback) {
+    await this.init();
+
     const query = Object.assign({ queueName: this.name }, comparator);
 
     this.datastore.countDocuments(query, callback);
