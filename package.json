@@ -24,9 +24,9 @@
     "queue"
   ],
   "devDependencies": {
-    "mocha": "^6.0.0",
-    "mongodb": "^3.1.10",
-    "simplecrawler": "^1.1.6"
+    "mocha": "^6.1.2",
+    "mongodb": "^3.2.3",
+    "simplecrawler": "^1.1.7"
   },
   "dependencies": {
     "flatten-obj": "^3.1.1",
