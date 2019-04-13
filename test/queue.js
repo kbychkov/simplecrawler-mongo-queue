@@ -68,7 +68,8 @@ describe('Queue object', function () {
     const queue = new MongoQueue(dbCollection);
 
     queue.init().then(result => {
-      assert.equal(result, 'queueName_1_status_1_created_1');
+      assert.equal(result.numIndexesBefore, 1);
+      assert.equal(result.numIndexesAfter, 3);
       done();
     }).catch(err => {
       done(err);
