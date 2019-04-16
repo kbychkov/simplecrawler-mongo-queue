@@ -19,18 +19,10 @@ class MongoQueue {
 
   init() {
     if (!initPromise) {
-      initPromise = new Promise((resolve, reject) => {
-        this.datastore.createIndexes([
-          { key: { queueName: 1, status: 1, created: 1 } },
-          { key: { url: 'hashed' } }
-        ], (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
-      });
+      initPromise = this.datastore.createIndexes([
+        { key: { queueName: 1, status: 1, created: 1 } },
+        { key: { url: 'hashed' } }
+      ]);
     }
 
     return initPromise;

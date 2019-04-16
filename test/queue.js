@@ -63,7 +63,7 @@ describe('Queue object', function () {
     assert.equal(queue.name, 'example');
   });
 
-  it('creates index on the collection', function (done) {
+  it('creates indexes on the collection', function (done) {
     const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
     const queue = new MongoQueue(dbCollection);
 
