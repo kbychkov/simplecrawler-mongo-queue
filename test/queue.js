@@ -25,6 +25,10 @@ describe('Queue object', function () {
     });
   });
 
+  beforeEach(function () {
+    this.dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
+  });
+
   it('exports function', function () {
     assert.equal(typeof MongoQueue, 'function');
   });
@@ -38,34 +42,29 @@ describe('Queue object', function () {
   });
 
   it('throw an error when incorrect `name` passed', function () {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-
     try {
-      new MongoQueue(dbCollection, '');
+      new MongoQueue(this.dbCollection, '');
     } catch (e) {
       assert.equal(e.message, '`name` param should be a non-empty string');
     }
   });
 
   it('initialized without a name', function () {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection);
+    const queue = new MongoQueue(this.dbCollection);
 
     assert.ok(queue instanceof MongoQueue);
     assert.ok(shortid.isValid(queue.name));
   });
 
   it('initialized with a given name', function () {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
     assert.ok(queue instanceof MongoQueue);
     assert.equal(queue.name, 'example');
   });
 
   it('creates indexes on the collection', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection);
+    const queue = new MongoQueue(this.dbCollection);
 
     queue.init().then(result => {
       assert.equal(result.numIndexesBefore, 1);
@@ -77,8 +76,7 @@ describe('Queue object', function () {
   });
 
   it('should replace `_id` with `id`', function () {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection);
+    const queue = new MongoQueue(this.dbCollection);
     const queueItem = exampleJSON[0];
 
     const result = queue.mapId(queueItem);
@@ -88,10 +86,9 @@ describe('Queue object', function () {
   });
 
   it('should find example record', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.exists('http://example.com/', (err, result) => {
         assert.equal(err, null);
@@ -102,8 +99,7 @@ describe('Queue object', function () {
   });
 
   it('should add to the queue', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
     const queueItem = {
       host: 'example.com',
       path: '/',
@@ -128,8 +124,7 @@ describe('Queue object', function () {
   });
 
   it('should return error when add duplicate', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
     const queueItem = {
       host: 'example.com',
       path: '/',
@@ -144,7 +139,7 @@ describe('Queue object', function () {
       stateData: {}
     };
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.add(queueItem, false, (err, result) => {
         if (err) {
@@ -157,10 +152,9 @@ describe('Queue object', function () {
   });
 
   it('should return the queue item by id', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.getById(1, (err, result) => {
         assert.equal(err, null);
@@ -171,15 +165,14 @@ describe('Queue object', function () {
   });
 
   it('should update queue item', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
     const updates = {
       stateData: {
         sentIncorrectSize: false
       }
     };
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.update(1, updates, (err, result) => {
         assert.equal(err, null);
@@ -192,8 +185,7 @@ describe('Queue object', function () {
   });
 
   it('should return error when updating nonexistent item', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
     const updates = {
       fetched: true,
       status: 'downloaded'
@@ -210,10 +202,9 @@ describe('Queue object', function () {
   });
 
   it('should return oldest unfetched item', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.oldestUnfetchedItem((err, result) => {
         assert.equal(err, null);
@@ -224,11 +215,10 @@ describe('Queue object', function () {
     });
   });
 
-  it('should return all fetched items', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+  it('should return the number of fetched items', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.countItems({ fetched: true }, (err, result) => {
         assert.equal(err, null);
@@ -238,11 +228,10 @@ describe('Queue object', function () {
     });
   })
 
-  it('should return all queued items', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+  it('should return the number of queued items', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.countItems({ status: 'queued' }, (err, result) => {
         assert.equal(err, null);
@@ -252,11 +241,10 @@ describe('Queue object', function () {
     });
   })
 
-  it('should return length of the queue', function (done) {
-    const dbCollection = this.dbClient.db(dbName).collection(shortid.generate());
-    const queue = new MongoQueue(dbCollection, 'example');
+  it('should return the length of the queue', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
 
-    dbCollection.insertMany(exampleJSON, (err, result) => {
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
       queue.getLength((err, result) => {
         assert.equal(err, null);
