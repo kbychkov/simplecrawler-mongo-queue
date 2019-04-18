@@ -30,9 +30,12 @@ class MongoQueue {
 
   mapId(queueItem) {
     if (!queueItem) return null;
-    const obj = Object.assign({ id: queueItem._id }, queueItem);
-    delete obj['_id'];
-    return obj;
+
+    (Array.isArray(queueItem) ? queueItem : [queueItem]).forEach(item => {
+      item.id = item._id;
+    });
+
+    return queueItem;
   }
 
   async add(queueItem, force, callback) {

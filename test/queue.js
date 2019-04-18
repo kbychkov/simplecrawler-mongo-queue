@@ -75,14 +75,22 @@ describe('Queue object', function () {
     });
   });
 
-  it('should replace `_id` with `id`', function () {
+  it('should project `_id` attribute to `id` for an item', function () {
     const queue = new MongoQueue(this.dbCollection);
-    const queueItem = exampleJSON[0];
 
-    const result = queue.mapId(queueItem);
+    const result = queue.mapId(Object.assign({}, exampleJSON[0]));
 
     assert.equal(result.id, 1);
-    assert.equal(result._id, undefined);
+  });
+
+  it('should project `_id` attribute to `id` for all items in array', function () {
+    const queue = new MongoQueue(this.dbCollection);
+
+    const result = queue.mapId(Array.from(exampleJSON));
+
+    result.forEach((item, i) => {
+      assert.equal(item.id, exampleJSON[i]._id);
+    });
   });
 
   it('should find example record', function (done) {
