@@ -262,4 +262,18 @@ describe('Queue object', function () {
     });
   });
 
+  it('should return all queue items with the status code 200', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
+
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
+      if (err) return done(err);
+      queue.filterItems({ 'stateData.code': 200 }, (err, result) => {
+        assert.equal(err, null);
+        assert.equal(result.length, 1);
+        assert.equal(result[0].id, 1);
+        done();
+      });
+    });
+  });
+
 });

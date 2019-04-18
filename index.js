@@ -144,8 +144,14 @@ class MongoQueue {
     this.datastore.countDocuments(query, callback);
   }
 
-  filterItems(comparator, callback) {
-    callback(new Error('Not implemented'));
+  async filterItems(comparator, callback) {
+    await this.init();
+
+    const query = Object.assign({ queueName: this.name }, comparator);
+
+    this.datastore.find(query).toArray((err, result) => {
+      callback(err, this.mapId(result));
+    });
   }
 
   getLength(callback) {
