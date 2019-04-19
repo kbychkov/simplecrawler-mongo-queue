@@ -164,7 +164,7 @@ describe('Queue object', function () {
 
     this.dbCollection.insertMany(exampleJSON, (err, result) => {
       if (err) return done(err);
-      queue.getById(1, (err, result) => {
+      queue.get(1, (err, result) => {
         assert.equal(err, null);
         assert.equal(result.url, 'http://example.com/');
         done();

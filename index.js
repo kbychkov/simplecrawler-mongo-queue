@@ -82,15 +82,7 @@ class MongoQueue {
     this.countItems({ url }, callback);
   }
 
-  // Parameter `index` doesn't make sense in database.
-  // I think it should be better to change `index` param to `id`
-  // in order to correspond with `update` method.
-  // I did not found use of this method in crawler.
-  get(index, callback) {
-    callback(new Error('Not implemented'));
-  }
-
-  async getById(id, callback) {
+  async get(id, callback) {
     await this.init();
 
     const query = {
