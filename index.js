@@ -38,6 +38,18 @@ class MongoQueue {
     return queueItem;
   }
 
+  static isAllowedStat(statisticName) {
+    const allowedStats = [
+      'actualDataSize',
+      'contentLength',
+      'downloadTime',
+      'requestLatency',
+      'requestTime'
+    ];
+
+    return allowedStats.includes(statisticName);
+  }
+
   async add(queueItem, force, callback) {
     await this.init();
 
@@ -124,12 +136,46 @@ class MongoQueue {
     });
   }
 
-  max(statisticName, callback) {
-    callback(new Error('Not implemented'));
+  async max(statisticName, callback) {
+    await this.init();
+
+    if (!MongoQueue.isAllowedStat(statisticName)) {
+      return callback(new Error('Invalid statistic'));
+    }
+
+    const query = {
+      queueName: this.name,
+      fetched: true
+    };
+
+    const key = {
+      [`stateData.${statisticName}`]: -1
+    };
+
+    this.datastore.findOne(query, { limit: 1, sort: key }, (err, result) => {
+      callback(err, result.stateData[statisticName]);
+    });
   }
 
-  min(statisticName, callback) {
-    callback(new Error('Not implemented'));
+  async min(statisticName, callback) {
+    await this.init();
+
+    if (!MongoQueue.isAllowedStat(statisticName)) {
+      return callback(new Error('Invalid statistic'));
+    }
+
+    const query = {
+      queueName: this.name,
+      fetched: true
+    };
+
+    const key = {
+      [`stateData.${statisticName}`]: 1
+    };
+
+    this.datastore.findOne(query, { limit: 1, sort: key }, (err, result) => {
+      callback(err, result.stateData[statisticName]);
+    });
   }
 
   avg(statisticName, callback) {

@@ -26,6 +26,32 @@
   }
 },{
   "_id": 2,
+  "created":"2018-10-13T03:58:40.500Z",
+  "queueName":"example",
+  "host":"example.com",
+  "path":"/",
+  "port":"",
+  "protocol":"http",
+  "uriPath":"/",
+  "url":"http://example.com/baz",
+  "depth":1,
+  "fetched":true,
+  "status":"headers",
+  "stateData":{
+    "requestLatency": 256,
+    "requestTime": 410,
+    "contentLength": 1234,
+    "contentType": "text/html; charset=UTF-8",
+    "code": 200,
+    "headers": {
+      "content-encoding": "gzip",
+      "accept-ranges": "bytes",
+      "cache-control": "max-age=604800",
+      "content-type": "text/html; charset=UTF-8"
+    }
+  }
+},{
+  "_id": 3,
   "created":"2018-10-13T03:58:40.350Z",
   "queueName":"example",
   "host":"example.com",
@@ -39,7 +65,7 @@
   "status":"queued",
   "stateData":{}
 },{
-  "_id": 3,
+  "_id": 4,
   "created":"2018-10-13T03:58:40.730Z",
   "queueName":"example",
   "host":"example.com",

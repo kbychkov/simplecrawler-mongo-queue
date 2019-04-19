@@ -216,7 +216,7 @@ describe('Queue object', function () {
       if (err) return done(err);
       queue.oldestUnfetchedItem((err, result) => {
         assert.equal(err, null);
-        assert.equal(result.id, 2);
+        assert.equal(result.id, 3);
         assert.equal(result.url, 'http://example.com/foo');
         done();
       });
@@ -230,7 +230,7 @@ describe('Queue object', function () {
       if (err) return done(err);
       queue.countItems({ fetched: true }, (err, result) => {
         assert.equal(err, null);
-        assert.equal(result, 1);
+        assert.equal(result, 2);
         done();
       });
     });
@@ -256,7 +256,7 @@ describe('Queue object', function () {
       if (err) return done(err);
       queue.getLength((err, result) => {
         assert.equal(err, null);
-        assert.equal(result, 3);
+        assert.equal(result, 4);
         done();
       });
     });
@@ -269,8 +269,44 @@ describe('Queue object', function () {
       if (err) return done(err);
       queue.filterItems({ 'stateData.code': 200 }, (err, result) => {
         assert.equal(err, null);
-        assert.equal(result.length, 1);
+        assert.equal(result.length, 2);
         assert.equal(result[0].id, 1);
+        assert.equal(result[1].id, 2);
+        done();
+      });
+    });
+  });
+
+  it('should verify for allowed statistics', function () {
+    assert.ok(MongoQueue.isAllowedStat('actualDataSize'));
+    assert.ok(MongoQueue.isAllowedStat('contentLength'));
+    assert.ok(MongoQueue.isAllowedStat('downloadTime'));
+    assert.ok(MongoQueue.isAllowedStat('requestLatency'));
+    assert.ok(MongoQueue.isAllowedStat('requestTime'));
+    assert.equal(MongoQueue.isAllowedStat('isNotAllowed'), false);
+  });
+
+  it('should get a max statistic from the queue', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
+
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
+      if (err) return done(err);
+      queue.max('contentLength', (err, result) => {
+        assert.equal(err, null);
+        assert.equal(result, 1234);
+        done();
+      });
+    });
+  });
+
+  it('should get a min statistic from the queue', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
+
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
+      if (err) return done(err);
+      queue.min('requestTime', (err, result) => {
+        assert.equal(err, null);
+        assert.equal(result, 341);
         done();
       });
     });
