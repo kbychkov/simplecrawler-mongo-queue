@@ -178,8 +178,26 @@ class MongoQueue {
     });
   }
 
-  avg(statisticName, callback) {
-    callback(new Error('Not implemented'));
+  async avg(statisticName, callback) {
+    await this.init();
+
+    if (!MongoQueue.isAllowedStat(statisticName)) {
+      return callback(new Error('Invalid statistic'));
+    }
+
+    const query = {
+      queueName: this.name,
+      fetched: true
+    };
+
+    const key = {
+      _id: null,
+      avg: { $avg: `$stateData.${statisticName}` }
+    };
+
+    this.datastore.aggregate().match(query).group(key).toArray((err, result) => {
+      callback(err, result[0].avg);
+    });
   }
 
   async countItems(comparator, callback) {

@@ -277,7 +277,7 @@ describe('Queue object', function () {
     });
   });
 
-  it('should verify for allowed statistics', function () {
+  it('should verify against allowed statistics', function () {
     assert.ok(MongoQueue.isAllowedStat('actualDataSize'));
     assert.ok(MongoQueue.isAllowedStat('contentLength'));
     assert.ok(MongoQueue.isAllowedStat('downloadTime'));
@@ -307,6 +307,19 @@ describe('Queue object', function () {
       queue.min('requestTime', (err, result) => {
         assert.equal(err, null);
         assert.equal(result, 341);
+        done();
+      });
+    });
+  });
+
+  it('should get an avg statistic from the queue', function (done) {
+    const queue = new MongoQueue(this.dbCollection, 'example');
+
+    this.dbCollection.insertMany(exampleJSON, (err, result) => {
+      if (err) return done(err);
+      queue.avg('contentLength', (err, result) => {
+        assert.equal(err, null);
+        assert.equal(result, 920);
         done();
       });
     });
