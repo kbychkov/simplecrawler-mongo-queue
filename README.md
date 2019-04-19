@@ -31,32 +31,7 @@ The `MongoQueue` constructor has two arguments.
 - `datastore` - the application should provide a MongoDB collection where the queue will be stored.
 - `name` (optional) - a name of the queue to distinguish the different crawlers. If the argument is omitted the constructor creates a random queue name.
 
-## Example
+## Resources
 
-Below is a minimal usage example with connection to MongoDB.
-
-```javascript
-const Crawler = require('simplecrawler');
-const MongoQueue = require('simplecrawler-mongo-queue');
-const MongoClient = require('mongodb').MongoClient;
-
-const client = new MongoClient('mongodb://localhost:27017', { useNewUrlParser: true });
-client.connect(err => {
-  const db = client.db('crawler');
-  const collection = db.collection('queue');
-
-  const crawler = new Crawler('http://example.com');
-  crawler.queue = new MongoQueue(collection, 'mycrawler');
-
-  crawler.on('complete', () => {
-    client.close();
-    process.exit();
-  });
-
-  crawler.start();
-});
-```
-
-## Performance
-
-The [charts](https://kbychkov.github.io/simplecrawler-mongo-queue/) reflect the database performance during a test run.
+- [Example](https://github.com/kbychkov/simplecrawler-mongo-queue/tree/master/example)
+- [Performance charts](https://kbychkov.github.io/simplecrawler-mongo-queue/)
