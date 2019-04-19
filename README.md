@@ -8,8 +8,6 @@
 
 This is a queue implementation for [simplecrawler](https://www.npmjs.com/package/simplecrawler) backed by MongoDB.
 
-**Warning!** The library is still in development and may work unstable.
-
 ## Installation
 
 ```
