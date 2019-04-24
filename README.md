@@ -6,7 +6,7 @@
 [![devDependency Status](https://img.shields.io/david/dev/kbychkov/simplecrawler-mongo-queue.svg)](https://david-dm.org/kbychkov/simplecrawler-mongo-queue?type=dev)
 [![Greenkeeper badge](https://badges.greenkeeper.io/kbychkov/simplecrawler-mongo-queue.svg)](https://greenkeeper.io/)
 
-This is a queue implementation for [simplecrawler](https://www.npmjs.com/package/simplecrawler) backed by MongoDB.
+This is a queue implementation for [simplecrawler](https://www.npmjs.com/package/simplecrawler) powered by MongoDB.
 
 ## Installation
 
@@ -56,3 +56,7 @@ client.connect(err => {
   crawler.start();
 });
 ```
+
+## Performance
+
+During a test run the database operation execution times were below 300 μs. The test has been executed on a virtual machine with 1 CPU / 1 GB memory / 25 GB SSD disk. The collection size is about 2 M records. Look at [the charts](https://kbychkov.github.io/simplecrawler-mongo-queue/) for details.
