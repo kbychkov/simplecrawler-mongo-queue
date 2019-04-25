@@ -59,4 +59,4 @@ client.connect(err => {
 
 ## Performance
 
-During a test run the database operation execution times were below 300 μs. The test has been executed on a virtual machine with 1 CPU / 1 GB memory / 25 GB SSD disk. The collection size is about 2 M records. Look at [the charts](https://kbychkov.github.io/simplecrawler-mongo-queue/) for details.
+The [charts](https://kbychkov.github.io/simplecrawler-mongo-queue/) reflect the database performance during a test run.
