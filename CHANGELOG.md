@@ -1,3 +1,14 @@
+# [0.4.0](https://github.com/kbychkov/simplecrawler-mongo-queue/compare/v0.3.0...v0.4.0) (2019-04-28)
+
+
+### Features
+
+* add `avg` method ([10e23a3](https://github.com/kbychkov/simplecrawler-mongo-queue/commit/10e23a3))
+* add `filterItems` method ([7c7a032](https://github.com/kbychkov/simplecrawler-mongo-queue/commit/7c7a032))
+* add `max` and `min` methods ([86d6561](https://github.com/kbychkov/simplecrawler-mongo-queue/commit/86d6561))
+
+
+
 # [0.3.0](https://github.com/kbychkov/simplecrawler-mongo-queue/compare/v0.2.0...v0.3.0) (2019-04-13)
 
 
