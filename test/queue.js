@@ -75,6 +75,14 @@ describe('Queue object', function () {
     });
   });
 
+  it('should create DB indexes and return MongoQueue instance', async function () {
+    const queue = await MongoQueue.create(this.dbCollection);
+    const result = await this.dbCollection.indexes();
+
+    assert.ok(queue instanceof MongoQueue);
+    assert.equal(result.length, 3);
+  });
+
   it('should project `_id` attribute to `id` for an item', function () {
     const queue = new MongoQueue(this.dbCollection);
 

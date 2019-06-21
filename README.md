@@ -16,17 +16,20 @@ npm install --save simplecrawler-mongo-queue
 
 ## Usage
 
-First of all, create a new simplecrawler instance as described in the [documentation](https://www.npmjs.com/package/simplecrawler#getting-started). Then create the queue instance and assign it to `crawler.queue` property.
+First of all, create a new Simplecrawler instance as described in the [documentation](https://github.com/simplecrawler/simplecrawler#getting-started). Then create the queue instance and assign it to `crawler.queue` property.
 
 ```javascript
 const Crawler = require('simplecrawler');
 const MongoQueue = require('simplecrawler-mongo-queue');
 
-const crawler = new Crawler('http://example.com');
-crawler.queue = new MongoQueue(datastore, name);
+(async () => {
+  const crawler = new Crawler('http://example.com');
+  crawler.queue = await MongoQueue.create(datastore, name);
+  crawler.start();
+})();
 ```
 
-The `MongoQueue` constructor has two arguments.
+The `create` method returns `MongoQueue` instance and has two arguments:
 
 - `datastore` - the application should provide a MongoDB collection where the queue will be stored.
 - `name` (optional) - a name of the queue to distinguish the different crawlers. If the argument is omitted the constructor creates a random queue name.
