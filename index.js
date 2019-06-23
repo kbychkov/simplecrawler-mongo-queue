@@ -1,8 +1,6 @@
 const flatten = require('flatten-obj')();
 const shortid = require('shortid');
 
-let initPromise;
-
 class MongoQueue {
   constructor(datastore, name) {
     if (typeof datastore !== 'object') throw new Error('`datastore` param should be a MongoDB collection');
@@ -24,17 +22,6 @@ class MongoQueue {
       { key: { url: 'hashed' } }
     ]);
     return queue;
-  }
-
-  init() {
-    if (!initPromise) {
-      initPromise = this.datastore.createIndexes([
-        { key: { queueName: 1, status: 1, created: 1 } },
-        { key: { url: 'hashed' } }
-      ]);
-    }
-
-    return initPromise;
   }
 
   mapId(queueItem) {
@@ -59,9 +46,7 @@ class MongoQueue {
     return allowedStats.includes(statisticName);
   }
 
-  async add(queueItem, force, callback) {
-    await this.init();
-
+  add(queueItem, force, callback) {
     const doc = Object.assign({}, queueItem, {
       queueName: this.name,
       status: 'queued',
@@ -91,9 +76,7 @@ class MongoQueue {
     this.countItems({ url }, callback);
   }
 
-  async get(id, callback) {
-    await this.init();
-
+  get(id, callback) {
     const query = {
       _id: id
     };
@@ -103,9 +86,7 @@ class MongoQueue {
     });
   }
 
-  async update(id, updates, callback) {
-    await this.init();
-
+  update(id, updates, callback) {
     const query = {
       _id: id
     };
@@ -124,9 +105,7 @@ class MongoQueue {
     });
   }
 
-  async oldestUnfetchedItem(callback) {
-    await this.init();
-
+  oldestUnfetchedItem(callback) {
     const query = {
       queueName: this.name,
       status: 'queued'
@@ -137,9 +116,7 @@ class MongoQueue {
     });
   }
 
-  async max(statisticName, callback) {
-    await this.init();
-
+  max(statisticName, callback) {
     if (!MongoQueue.isAllowedStat(statisticName)) {
       return callback(new Error('Invalid statistic'));
     }
@@ -158,9 +135,7 @@ class MongoQueue {
     });
   }
 
-  async min(statisticName, callback) {
-    await this.init();
-
+  min(statisticName, callback) {
     if (!MongoQueue.isAllowedStat(statisticName)) {
       return callback(new Error('Invalid statistic'));
     }
@@ -179,9 +154,7 @@ class MongoQueue {
     });
   }
 
-  async avg(statisticName, callback) {
-    await this.init();
-
+  avg(statisticName, callback) {
     if (!MongoQueue.isAllowedStat(statisticName)) {
       return callback(new Error('Invalid statistic'));
     }
@@ -201,17 +174,13 @@ class MongoQueue {
     });
   }
 
-  async countItems(comparator, callback) {
-    await this.init();
-
+  countItems(comparator, callback) {
     const query = Object.assign({ queueName: this.name }, comparator);
 
     this.datastore.countDocuments(query, callback);
   }
 
-  async filterItems(comparator, callback) {
-    await this.init();
-
+  filterItems(comparator, callback) {
     const query = Object.assign({ queueName: this.name }, comparator);
 
     this.datastore.find(query).toArray((err, result) => {

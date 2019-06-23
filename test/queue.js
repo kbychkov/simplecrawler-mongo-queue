@@ -63,18 +63,6 @@ describe('Queue object', function () {
     assert.equal(queue.name, 'example');
   });
 
-  it('creates indexes on the collection', function (done) {
-    const queue = new MongoQueue(this.dbCollection);
-
-    queue.init().then(result => {
-      assert.equal(result.numIndexesBefore, 1);
-      assert.equal(result.numIndexesAfter, 3);
-      done();
-    }).catch(err => {
-      done(err);
-    });
-  });
-
   it('should create DB indexes and return MongoQueue instance', async function () {
     const queue = await MongoQueue.create(this.dbCollection);
     const result = await this.dbCollection.indexes();
