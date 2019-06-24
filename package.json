@@ -1,6 +1,6 @@
 {
   "name": "simplecrawler-mongo-queue",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "MongoDB queue implementation for simplecrawler",
   "author": {
     "name": "Konstantin Bychkov",

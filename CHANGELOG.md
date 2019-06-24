@@ -1,3 +1,12 @@
+# [1.0.0](https://github.com/kbychkov/simplecrawler-mongo-queue/compare/v0.4.0...v1.0.0) (2019-06-24)
+
+
+### Features
+
+* introduce MongoQueue.create method ([0f1a8a1](https://github.com/kbychkov/simplecrawler-mongo-queue/commit/0f1a8a1))
+
+
+
 # [0.4.0](https://github.com/kbychkov/simplecrawler-mongo-queue/compare/v0.3.0...v0.4.0) (2019-04-28)
 
 
