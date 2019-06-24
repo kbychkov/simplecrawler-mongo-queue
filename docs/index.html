@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>simplecrawler-mongo-queue performance charts</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    html {
+      color: #333;
+      font-family: "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, sans-serif;
+    }
+    body {
+      margin: 1rem;
+    }
+    .masthead {
+      max-width: 60rem;
+      margin-bottom: 3rem;
+    }
+    .chart {
+      width: 100%;
+      height: 280px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="masthead">
+    <h1>simplecrawler-mongo-queue performance charts</h1>
+    <p>The charts represent basic metrics of a database while crawling a test website with <a href="https://github.com/simplecrawler/simplecrawler">simplecrawler</a> backed by <a href="https://github.com/kbychkov/simplecrawler-mongo-queue">simplecrawler-mongo-queue</a> on a virtual machine (1&nbsp;CPU / 1&nbsp;GB memory / 25&nbsp;GB SSD disk). The collection size is about 2&nbsp;M records. The data provided by MongoDB free monitoring.</p>
+  </div>
+
+  <div class="chart" id="container1"></div>
+  <div class="chart" id="container2"></div>
+  <div class="chart" id="container3"></div>
+  <div class="chart" id="container4"></div>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/data.js"></script>
+  <script>
+    (function () {
+      const fnPlot = ({ hostCharts }) => {
+        const id = Object.keys(hostCharts)[0];
+
+        Highcharts.chart('container1', {
+          plotOptions: {
+            line: {
+              lineWidth: 1
+            },
+            series: {
+              pointStart: hostCharts[id].timestamps[0],
+              pointInterval: 60000
+            }
+          },
+          series: [{
+            name: 'Reads',
+            data: hostCharts[id].charts.avg_op_execution_time.series['serverStatus.opLatencies.reads']
+          }, {
+            name: 'Writes',
+            data: hostCharts[id].charts.avg_op_execution_time.series['serverStatus.opLatencies.writes']
+          }],
+          title: {
+            align: 'left',
+            text: 'Operation Execution Times'
+          },
+          xAxis: {
+            labels: {
+              formatter: function () {
+                return Highcharts.dateFormat('%H:%M', this.value);
+              }
+            },
+            type: 'datetime'
+          },
+          yAxis: {
+            labels: {
+              formatter: function () {
+                if (this.value == 0) return 0;
+                return this.value < 1 ? `${this.value * 1000}µs` : `${this.value}ms`;
+              }
+            },
+            min: 0,
+            title: {
+              text: null
+            }
+          }
+        });
+
+        Highcharts.chart('container2', {
+          plotOptions: {
+            line: {
+              lineWidth: 1
+            },
+            series: {
+              pointStart: hostCharts[id].timestamps[0],
+              pointInterval: 60000
+            }
+          },
+          series: [{
+            name: 'Returned',
+            data: hostCharts[id].charts.documents.series['serverStatus.metrics.document.returned']
+          }, {
+            name: 'Inserted',
+            data: hostCharts[id].charts.documents.series['serverStatus.metrics.document.inserted']
+          }, {
+            name: 'Updated',
+            data: hostCharts[id].charts.documents.series['serverStatus.metrics.document.updated']
+          }],
+          title: {
+            align: 'left',
+            text: 'Documents'
+          },
+          xAxis: {
+            labels: {
+              formatter: function () {
+                return Highcharts.dateFormat('%H:%M', this.value);
+              }
+            },
+            type: 'datetime'
+          },
+          yAxis: {
+            labels: {
+              formatter: function () {
+                return this.value == 0 ? 0 : `${this.value}/s`;
+              }
+            },
+            min: 0,
+            title: {
+              text: null
+            }
+          }
+        });
+
+        Highcharts.chart('container3', {
+          plotOptions: {
+            line: {
+              lineWidth: 1
+            },
+            series: {
+              pointStart: hostCharts[id].timestamps[0],
+              pointInterval: 60000
+            }
+          },
+          series: [{
+            name: 'Bytes In',
+            data: hostCharts[id].charts.network_io.series['serverStatus.network.physicalBytesIn']
+          }, {
+            name: 'Bytes Out',
+            data: hostCharts[id].charts.network_io.series['serverStatus.network.physicalBytesOut']
+          }],
+          title: {
+            align: 'left',
+            text: 'Network Input/Output'
+          },
+          xAxis: {
+            labels: {
+              formatter: function () {
+                return Highcharts.dateFormat('%H:%M', this.value);
+              }
+            },
+            type: 'datetime'
+          },
+          yAxis: {
+            labels: {
+              formatter: function () {
+                if (this.value == 0) return 0;
+                return this.value > 1000 ? `${this.value / 1000}kB/s` : `${this.value}B/s`;
+              }
+            },
+            min: 0,
+            title: {
+              text: null
+            }
+          }
+        });
+
+        Highcharts.chart('container4', {
+          plotOptions: {
+            line: {
+              lineWidth: 1
+            },
+            series: {
+              pointStart: hostCharts[id].timestamps[0],
+              pointInterval: 60000
+            }
+          },
+          series: [{
+            name: 'User',
+            data: hostCharts[id].charts.system_cpu.series['systemMetrics.cpu.user_ms']
+          }, {
+            name: 'Kernel',
+            data: hostCharts[id].charts.system_cpu.series['systemMetrics.cpu.system_ms']
+          }],
+          title: {
+            align: 'left',
+            text: 'System CPU Usage'
+          },
+          xAxis: {
+            labels: {
+              formatter: function () {
+                return Highcharts.dateFormat('%H:%M', this.value);
+              }
+            },
+            type: 'datetime'
+          },
+          yAxis: {
+            labels: {
+              formatter: function () {
+                return this.value == 0 ? 0 : `${this.value}%`;
+              }
+            },
+            min: 0,
+            title: {
+              text: null
+            }
+          }
+        });
+      };
+
+      Highcharts.ajax({
+        url: 'example.json',
+        dataType: 'json',
+        success: fnPlot
+      });
+    })();
+  </script>
+</body>
+</html>
