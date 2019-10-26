@@ -71,6 +71,23 @@ describe('Queue object', function () {
     assert.equal(result.length, 3);
   });
 
+  it('should be able to reuse `create` method', async function () {
+    class ChildQueue extends MongoQueue {
+      constructor(datastore) {
+        super(datastore);
+      }
+
+      static async create(datastore) {
+        return MongoQueue.create.call(this, datastore);
+      }
+    }
+
+    const child = await ChildQueue.create(this.dbCollection);
+
+    assert.ok(child instanceof MongoQueue);
+    assert.ok(child instanceof ChildQueue);
+  });
+
   it('should project `_id` attribute to `id` for an item', function () {
     const queue = new MongoQueue(this.dbCollection);
 

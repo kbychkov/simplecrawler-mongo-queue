@@ -16,7 +16,7 @@ class MongoQueue {
   }
 
   static async create(datastore, name) {
-    const queue = new MongoQueue(datastore, name);
+    const queue = new this(datastore, name);
     await queue.datastore.createIndexes([
       { key: { queueName: 1, status: 1, created: 1 } },
       { key: { url: 'hashed' } }
