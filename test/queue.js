@@ -11,7 +11,8 @@ describe('Queue object', function () {
   const dbName = 'simplecrawler-mongo-queue-test';
 
   before(function (done) {
-    MongoClient.connect(dbUri, { useNewUrlParser: true }, (err, client) => {
+    this.timeout(5000);
+    MongoClient.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
       if (err) return done(err);
       this.dbClient = client;
       done();
