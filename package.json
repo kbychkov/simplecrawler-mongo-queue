@@ -28,7 +28,7 @@
     "queue"
   ],
   "devDependencies": {
-    "mocha": "^6.2.2",
+    "mocha": "^7.2.0",
     "mongodb": "^3.3.3",
     "simplecrawler": "^1.1.8",
     "standard-version": "^7.0.0"
